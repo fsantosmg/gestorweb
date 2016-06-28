@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+
+        <f:metadata>
+            <f:viewParam name="dummy" />
+            <f:event listener="#{cadastroProdutoBean.inicializar}" type="preRenderView" />
+
+        </f:metadata>
+        <h:form id="ftmLanc">
+            <p:commandButton value="Salvar" id="botaoSalvar"
+                             action="#{lancFinanceiroBean.salvar}" />
+            <!--            <p:outputLabel value="Categoria" for="categoria"/>-->
+
+
+            <!--            <p:outputLabel value="Categoria" for="categoria"/>
+                        <p:selectOneMenu id="categoria" value="#{lancFinanceiroBean.categoriaPai}" >
+                            <f:selectItem itemLabel="Selecione a categoria"/>
+                            <f:selectItems value="#{lancFinanceiroBean.categoriasRaizes}" var="c"
+                                           itemValue="#{c}" itemLabel="#{c.descricao}" />
+                            <p:ajax listener=" update="subcategoria"  />
+                        </p:selectOneMenu>
+            
+                        <p:outputLabel value="Subcategoria" for="subcategoria"/>
+                        <p:selectOneMenu id="subcategoria" value="#{lancFinanceiroBean.lancamento.categoria}">
+                            <f:selectItem itemLabel="Selecione a subcategoria"/>
+                            <f:selectItems value="#{cadastroProdutoBean.subcategorias}" var="s"
+                                           itemValue="#{s}" itemLabel="#{s.descricao}" />
+                        </p:selectOneMenu>-->
+
+            <h:selectOneMenu value="#{lancFinanceiroBean.categoriaPai}">
+                <f:selectItem itemLabel="selecione"
+                              itemValue=""/>
+                <f:selectItems value="#{lancFinanceiroBean.categoriasRaizes}" var="c" itemLabel="#{c.descricao}" itemValue="#{c}"/>
+                <f:ajax execute="@this"
+                        render="selectSubcategoria"
+                         />
+            </h:selectOneMenu>
+            <h:selectOneMenu id="selectSubcategoria"
+                             value="#{lancFinanceiroBean.lancamento}">
+                <f:selectItem itemLabel="subcategorias"
+                              itemValue=""/>
+                <f:selectItems value="#{lancFinanceiroBean.subcategorias}" var="s" itemLabel="#{s.descricao}" itemValue="#{s}"/>
+
+            </h:selectOneMenu>
+            <h:outputLabel id="categpai" value="#{lancFinanceiroBean.categoriaPai}"/>
+        </h:form>
+    </h:body>
+</html>
+

@@ -1,0 +1,40 @@
+<ui:composition template="/template/LayoutPadrao.xhtml"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:o="http://omnifaces.org/ui">
+    
+    <f:metadata>
+    <o:viewParam name="pedido" value="#{cadastroPedidoBean.pedido}"/>
+   <f:event listener="#{cadastroPedidoBean.inicializar()}" type="preRenderView"/>
+    </f:metadata>
+
+    <ui:define name="titulo">#{cadastroPedidoBean.editando ? 'Editar pedido' : 'Novo Pedido'}</ui:define>
+    
+    <ui:define name="corpo">
+    	<h:form id="frmCadastroPedido">
+	    	<h1>#{cadastroPedidoBean.editando ? 'Editar pedido' : 'Novo Pedido'}</h1>
+	    	
+	    	<p:messages autoUpdate="true" />
+	    	
+	    	<ui:include src="/template/pedidos/BotoesPedido.xhtml" />
+	    	
+	    	<ui:include src="/template/pedidos/CapaPedido.xhtml" />
+	    	
+	    	<p:tabView style="margin-top: 20px">
+	    		<p:tab title="Itens">
+	    			<ui:include src="/template/pedidos/ItensPedido.xhtml" />
+	    		</p:tab>
+	    		<p:tab title="Dados de entrega">
+	    		<ui:include src="/template/pedidos/DadosEntregaPedido.xhtml" />
+	    		</p:tab>
+	    		<p:tab title="Observação">
+	    			<ui:include src="/template/pedidos/ObservacaoPedido.xhtml" />
+	    		</p:tab>
+	    	</p:tabView>
+	    	
+    	</h:form>
+    </ui:define>
+</ui:composition>
