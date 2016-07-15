@@ -1,0 +1,74 @@
+<ui:composition template="/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="corpo">
+
+		<h:panelGroup id="edicao">
+			<p:messages id="messages" showDetail="true" autoUpdate="true"
+				closable="true" />
+			<h:form rendered="#{categoriaBean.mostraEdicao}">
+				<h:inputHidden value="#{categoriaBean.editada.codigo}" />
+
+
+				<h:panelGrid columns="2">
+					<h:outputLabel value="Tipo" />
+
+					<h:outputLabel
+						value="#{categoriaLancamentoBean.editada.pai.descricao}" />
+
+
+					<h:outputLabel value="Descrição" />
+					<h:inputText value="#{categoriaLancamentoBean.editada.descricao}" />
+					<h:outputText />
+					<h:panelGroup>
+						<p:commandButton value="Salvar"
+							action="#{categoriaLancamentoBean.salvar}"
+							update="edicao, :arvore" />
+						<p:commandButton value="Cancelar"
+							action="#{categoriaLancamentoBean.cancelar}"
+							update="edicao, :arvore" />
+					</h:panelGroup>
+
+
+
+				</h:panelGrid>
+			</h:form>
+		</h:panelGroup>
+
+
+		<h:panelGroup id="arvore">
+			<h:form>
+				<p:treeTable value="#{categoriaLancamentoBean.categoriasTree}"
+					var="categ" selectionMode="single"
+					selection="#{categoriaLancamentoBean.selectedNode}"
+					style="width:500px;" resizableColumns="true">
+					<f:facet name="header">
+            		Categorias de Lançamentos
+        		</f:facet>
+					<p:column>
+						<f:facet name="header">Categoria</f:facet>
+						<h:outputText value="#{categ.}" />
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">Tipo</f:facet>
+						<h:outputText value="#{categoria.pai.descricao}" />
+					</p:column>
+
+				</p:treeTable>
+				<p:commandButton actionListener="#{categoriaBean.novo()}"
+					value="Novo" update=":edicao" />
+
+				<p:commandButton value="Excluir" action="#{categoriaBean.excluir}"
+					update=":edicao, arvore" />
+			</h:form>
+
+		</h:panelGroup>
+
+
+	</ui:define>
+</ui:composition>

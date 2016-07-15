@@ -1,9 +1,7 @@
 package net.webvalor.Services;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,11 +9,10 @@ import javax.inject.Inject;
 import net.webvalor.dao.comercial.ClientesDao;
 import net.webvalor.dao.comercial.PedidosDao;
 import net.webvalor.dao.comercial.UsuariosDao;
+import net.webvalor.model.Usuario;
 import net.webvalor.model.comercial.Cliente;
-import net.webvalor.model.comercial.ItemPedido;
 import net.webvalor.model.comercial.Pedido;
 import net.webvalor.model.comercial.StatusPedido;
-import net.webvalor.model.Usuario;
 
 public class PedidosService implements Serializable {
 

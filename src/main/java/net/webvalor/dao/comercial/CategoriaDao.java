@@ -25,7 +25,7 @@ public class CategoriaDao implements Serializable {
     }
 
     public List<CategoriaProduto> subcategoriasDe(CategoriaProduto categoriaPai) {
-        return manager.createQuery("from CategoriaProduto where categoriaPai = :raiz",
+        return manager.createQuery("from ategoriaProduto where categoriaPai = :raiz",
                 CategoriaProduto.class).setParameter("raiz", categoriaPai).getResultList();
     }
 

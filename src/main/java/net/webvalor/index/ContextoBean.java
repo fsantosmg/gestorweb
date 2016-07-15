@@ -7,90 +7,101 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
-import net.webvalor.Services.ContaRN;
-import net.webvalor.Services.EmpresaRN;
-import net.webvalor.dao.EmpresaDao;
-import net.webvalor.model.Empresa;
-import net.webvalor.model.Usuario;
-import net.webvalor.model.financeiro.Conta;
+
+import net.webvalor.financeiro.conta.Conta;
+import net.webvalor.financeiro.conta.ContaRN;
+import net.webvalor.financeiro.empresa.Empresa;
+import net.webvalor.financeiro.empresa.EmpresaDAO;
 
 @Named
 @SessionScoped
-public class ContextoBean implements Serializable {
+public class ContextoBean implements Serializable{
+	//private Usuario usuarioLogado = null;
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 
-    private static final long serialVersionUID = 1L;
+	private Conta contaAtiva = null;
+	
 
-    private Usuario usuarioLogado = null;
-    private Conta contaAtiva = null;
-    private Empresa empresaSelecionada = null;
-    private String pagina;
+	
+	private Empresa empresaSelecionada = null;
+	
+	private String pagina;
+	
+	@Inject
+	EmpresaDAO empresaDAO;
+	
+	
+	@Inject 
+	ContaRN condaDAO;
 
-    @Inject
-    EmpresaDao empresaDAO;
+	/*
+	 * public Usuario getUsuarioLogado() { FacesContext context =
+	 * FacesContext.getCurrentInstance(); ExternalContext external =
+	 * context.getExternalContext(); String login = external.getRemoteUser();
+	 * 
+	 * if (this.usuarioLogado == null ||
+	 * !login.equals(this.usuarioLogado.getLogin())) {
+	 * 
+	 * if (login != null) { UsuarioRN usuarioRN = new UsuarioRN();
+	 * this.usuarioLogado = usuarioRN.buscarPorLogin(login); } } return
+	 * usuarioLogado; }
+	 */
 
-    @Inject
-    EmpresaRN empresaRN;
+	public Empresa getEmpresaSelecionada() {
 
-    @Inject
-    ContaRN contaRN;
+		if (this.empresaSelecionada == null) {
+			//EmpresaRN empresaRN = new EmpresaRN();
+			this.empresaSelecionada = empresaDAO.buscaSelecionda();
+			//this.empresaSelecionada = empresaDAO.buscaSelecionda();
+		}
 
-//	public Usuario getUsuarioLogado() {
-//		FacesContext context = FacesContext.getCurrentInstance();
-//		ExternalContext external = context.getExternalContext();
-//		String login = external.getRemoteUser();
-//
-//		if (this.usuarioLogado == null || !login.equals(this.usuarioLogado.getLogin())) {
-//
-//			if (login != null) {
-//				UsuarioRN usuarioRN = new UsuarioRN();
-//				this.usuarioLogado = usuarioRN.buscarPorLogin(login);
-//			}
-//		}
-//		return usuarioLogado;
-//	}
-    public Empresa getEmpresaSelecionada() {
+		return empresaSelecionada;
+	}
 
-        if (this.empresaSelecionada == null) {
-            //EmpresaRN empresaRN = new EmpresaRN();
-            this.empresaSelecionada = empresaRN.buscaSelecionda();
-            //this.empresaSelecionada = empresaDAO.buscaSelecionda();
-        }
+	public Conta getContaAtiva() {
+		
+		if (this.contaAtiva == null) {
+			
+			empresaSelecionada = getEmpresaSelecionada();
 
-        return empresaSelecionada;
-    }
+			//ContaRN contaRN = new ContaRN();
+			this.contaAtiva = condaDAO.buscarFavorita(empresaSelecionada);
 
-    public Conta getContaAtiva() {
+			//se nao ouver conta marcada como ativa envia a primeira
+			if (this.contaAtiva == null) {
+				List<Conta> contas = condaDAO.listar(empresaSelecionada);
+				if (contas != null) {
+					for (Conta conta : contas) {
+						this.contaAtiva = conta;
+						break;
+					}
+				}
+			}
+		}
+		return this.contaAtiva;
+	}
+	
+	
 
-        if (this.contaAtiva == null) {
+	public void setContaAtiva(ValueChangeEvent event) {
+		
+		Integer conta =  (Integer) event.getNewValue();
 
-            Empresa empresa = getEmpresaSelecionada();
+		ContaRN contaRN = new ContaRN();
+		this.contaAtiva = contaRN.carregar(conta);
+	}
 
-            //ContaRN contaRN = new ContaRN();
-            this.contaAtiva = contaRN.buscarFavorita(empresa);
-
-            if (this.contaAtiva == null) {
-                List<Conta> contas = contaRN.listar(empresa);
-                if (contas != null) {
-                    for (Conta conta : contas) {
-                        this.contaAtiva = conta;
-                        break;
-                    }
-                }
-            }
-        }
-        return this.contaAtiva;
-    }
-
-    public void setContaAtiva(ValueChangeEvent event) {
-        Integer conta = (Integer) event.getNewValue();
-        this.contaAtiva = contaRN.carregar(conta);
-    }
-
-    public String getPagina() {
-        if (pagina.isEmpty()) {
-            pagina = "/faces/restrito/principal";
-        }
-        return pagina;
-    }
+	public String getPagina() {
+		if (pagina.isEmpty()) {
+			pagina = "/faces/restrito/principal";
+		}
+		return pagina;
+	}
 
 }
